@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>శుభ వివాహం — Wedding RSVP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+Telugu:wght@400;600;700&family=Lato:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9932A; --gold-light: #F0C060; --maroon: #800020;
+      --cream: #FDF6E9; --cream-dark: #F5E8D0;
+      --text-dark: #3A1A0A; --text-mid: #6B3A1F;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Lato', sans-serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; }
+
+    /* ── CLASSIC BASE ── */
+    .section-divider { display: flex; align-items: center; gap: 16px; margin: 0 auto 40px; max-width: 500px; }
+    .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+    .section-divider .deco-icon { color: var(--gold); font-size: 1.4rem; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: rgba(128,0,32,0.95); backdrop-filter: blur(6px);
+      padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1.1rem; letter-spacing: 1px; }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a { color: #f0d9b5; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.5px; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--gold-light); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--gold-light); border-radius: 2px; }
+
+    #hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 100px 24px 60px; position: relative; overflow: hidden;
+      background: radial-gradient(ellipse at top, rgba(201,147,42,0.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at bottom, rgba(128,0,32,0.12) 0%, transparent 60%), var(--cream);
+    }
+    #hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(201,147,42,0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .hero-frame {
+      position: relative; max-width: 680px; width: 100%; padding: 48px 40px;
+      border: 2px solid var(--gold); background: rgba(253,246,233,0.88); backdrop-filter: blur(4px);
+      box-shadow: 0 0 0 8px rgba(201,147,42,0.12), 0 8px 40px rgba(128,0,32,0.1);
+    }
+    .hero-frame::before { content: '✦'; position: absolute; color: var(--gold); font-size: 1.4rem; top: -14px; left: 50%; transform: translateX(-50%); background: var(--cream); padding: 0 12px; }
+    .hero-frame::after  { content: '✦'; position: absolute; color: var(--gold); font-size: 1.4rem; bottom: -14px; left: 50%; transform: translateX(-50%); background: var(--cream); padding: 0 12px; }
+    .corner { position: absolute; width: 28px; height: 28px; border-color: var(--gold); border-style: solid; }
+    .corner.tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
+    .corner.tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
+    .corner.bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
+    .corner.br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+
+    .ganesha-hero { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold); box-shadow: 0 0 0 6px rgba(201,147,42,0.15), 0 4px 16px rgba(128,0,32,0.2); margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto; }
+    .ganesha-invoke { font-family: 'Noto Serif Telugu', serif; font-size: 1.0rem; color: var(--gold); letter-spacing: 1.5px; margin-bottom: 20px; opacity: 0.9; }
+    .hero-badge { font-family: 'Noto Serif Telugu', serif; color: var(--maroon); font-size: 1.1rem; margin-bottom: 16px; opacity: 0.85; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; width: 100%; }
+    .hero-badge span:nth-child(1) { text-align: left; }
+    .hero-badge span:nth-child(2) { text-align: center; }
+    .hero-badge span:nth-child(3) { text-align: right; }
+    .hero-names { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem,6vw,3.6rem); color: var(--maroon); line-height: 1.2; margin-bottom: 6px; }
+    .hero-names .amp { color: var(--gold); font-style: italic; font-size: 0.5em; display: block; }
+    .hero-names-telugu { font-family: 'Noto Serif Telugu', serif; font-size: clamp(1rem,3vw,1.4rem); color: var(--text-mid); margin-bottom: 28px; }
+    .hero-couple-img { width: 240px; height: 240px; object-fit: cover; object-position: top center; border-radius: 0; border: 3px solid var(--gold); outline: 6px solid rgba(201,147,42,0.25); outline-offset: 4px; box-shadow: 0 0 0 10px rgba(201,147,42,0.08), inset 0 0 0 1px var(--gold), 0 8px 32px rgba(128,0,32,0.2); display: block; margin: 0 auto 28px; }
+    .hero-divider { width: 80px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 0 auto 24px; }
+    .hero-date { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text-mid); letter-spacing: 1px; margin-bottom: 6px; }
+    .hero-venue { font-size: 0.95rem; color: var(--text-mid); margin-bottom: 32px; }
+    .hero-invite { font-size: 0.92rem; color: var(--text-mid); line-height: 1.85; margin-bottom: 24px; font-style: normal; padding: 0 8px; }
+    .btn-primary {
+      display: inline-block; padding: 14px 36px;
+      background: linear-gradient(135deg, var(--maroon), #A0001A); color: #fff; border: none;
+      border-radius: 2px; font-family: 'Lato', sans-serif; font-size: 0.9rem;
+      letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 16px rgba(128,0,32,0.25);
+      position: relative; overflow: hidden;
+    }
+    .btn-primary::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(128,0,32,0.35); }
+    .marigold-row { display: flex; justify-content: center; gap: 6px; margin-top: 28px; font-size: 1.4rem; }
+
+    section { padding: 80px 24px; }
+    .section-title { text-align: center; font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,4vw,2.4rem); color: var(--maroon); margin-bottom: 8px; }
+    .section-sub { text-align: center; font-family: 'Noto Serif Telugu', serif; color: var(--gold); font-size: 1rem; margin-bottom: 36px; }
+    .container { max-width: 1000px; margin: 0 auto; }
+
+    #ceremonies { background: var(--cream-dark); }
+    .ceremonies-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 320px)); gap: 24px; justify-content: center; }
+    .ceremony-card {
+      background: var(--cream); border: 1px solid rgba(201,147,42,0.35); border-top: 4px solid var(--gold);
+      padding: 28px 24px; border-radius: 2px; box-shadow: 0 2px 12px rgba(128,0,32,0.06);
+      transition: transform 0.25s, box-shadow 0.25s; position: relative; overflow: hidden;
+    }
+    .ceremony-card::before { content: ''; position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: radial-gradient(circle at top right, rgba(201,147,42,0.1), transparent 70%); }
+    .ceremony-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(128,0,32,0.12); }
+    .ceremony-img { width: calc(100% + 48px); margin: -28px -24px 20px; height: 200px; object-fit: cover; display: block; }
+    .ceremony-icon { font-size: 2rem; margin-bottom: 12px; }
+    .ceremony-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--maroon); margin-bottom: 4px; }
+    .ceremony-telugu { font-family: 'Noto Serif Telugu', serif; font-size: 0.95rem; color: var(--gold); margin-bottom: 14px; }
+    .ceremony-detail { font-size: 0.88rem; color: var(--text-mid); line-height: 1.7; }
+    .ceremony-detail strong { color: var(--text-dark); }
+
+    #venue { background: var(--cream); }
+    .venue-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: stretch; }
+    .venue-card { height: 100%; box-sizing: border-box; }
+    .venue-card { border: 1px solid rgba(201,147,42,0.4); padding: 36px 32px; background: var(--cream-dark); position: relative; }
+    .venue-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--maroon), var(--gold), var(--maroon)); }
+    .venue-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--maroon); margin-bottom: 16px; }
+    .venue-detail { font-size: 0.92rem; color: var(--text-mid); line-height: 1.9; margin-bottom: 24px; }
+    .venue-detail span { display: block; }
+    .btn-secondary { display: inline-block; padding: 12px 28px; border: 2px solid var(--maroon); color: var(--maroon); text-decoration: none; font-size: 0.88rem; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s; border-radius: 2px; }
+    .btn-secondary:hover { background: var(--maroon); color: #fff; }
+
+    #rsvp { background: linear-gradient(180deg, var(--cream-dark) 0%, var(--cream) 100%); }
+    .rsvp-form-wrap { max-width: 680px; margin: 0 auto; background: #fff; border: 1px solid rgba(201,147,42,0.35); padding: 48px 40px; box-shadow: 0 4px 32px rgba(128,0,32,0.08); position: relative; }
+    .rsvp-form-wrap::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, var(--maroon), var(--gold), var(--maroon)); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group { margin-bottom: 22px; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-mid); margin-bottom: 7px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; border: 1.5px solid #ddd; border-radius: 2px; font-family: 'Lato', sans-serif; font-size: 0.95rem; color: var(--text-dark); background: #fdfaf5; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,147,42,0.12); }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-mid); cursor: pointer; }
+    .checkbox-item input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--maroon); cursor: pointer; }
+    .btn-submit { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--maroon), #A0001A); color: #fff; border: none; border-radius: 2px; font-family: 'Lato', sans-serif; font-size: 0.9rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 16px rgba(128,0,32,0.25); margin-top: 8px; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(128,0,32,0.35); }
+
+    .success-msg { display: none; text-align: center; padding: 40px 20px; }
+    .success-msg.active { display: block; }
+    .success-icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .success-msg h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--maroon); margin-bottom: 8px; }
+    .success-msg .success-telugu { font-family: 'Noto Serif Telugu', serif; font-size: 1.1rem; color: var(--gold); margin-bottom: 12px; }
+    .success-msg p { color: var(--text-mid); font-size: 0.95rem; line-height: 1.7; }
+
+    .color-swatches { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); }
+
+
+    footer { background: var(--text-dark); color: rgba(255,255,255,0.6); text-align: center; padding: 40px 24px 32px; }
+    .footer-families { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold-light); margin-bottom: 12px; }
+    .footer-contact { font-size: 0.88rem; margin-bottom: 24px; }
+    .footer-contact a { color: var(--gold-light); text-decoration: none; }
+    .footer-kolam { font-size: 1.8rem; letter-spacing: 6px; margin-bottom: 16px; opacity: 0.5; }
+    .footer-copy { font-size: 0.8rem; opacity: 0.4; }
+
+    #countdown { background: var(--maroon); text-align: center; padding: 80px 24px; }
+    #countdown .section-title { color: var(--gold-light); }
+    #countdown .section-sub { color: rgba(240,192,96,0.7); }
+    #countdown .section-divider::before, #countdown .section-divider::after { background: linear-gradient(90deg, transparent, rgba(240,192,96,0.5), transparent); }
+    #countdown .section-divider .deco-icon { color: var(--gold-light); }
+    .countdown-grid { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 8px; }
+    .countdown-box { background: rgba(255,255,255,0.08); border: 1px solid rgba(240,192,96,0.3); padding: 28px 32px; min-width: 110px; border-radius: 2px; }
+    .countdown-num { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem,6vw,3.6rem); color: var(--gold-light); line-height: 1; }
+    .countdown-label { font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(240,192,96,0.65); margin-top: 8px; }
+    .countdown-done { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--gold-light); margin-top: 16px; }
+
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 52px; left: 0; right: 0; background: rgba(128,0,32,0.97); padding: 20px 24px; gap: 16px; }
+      .hamburger { display: flex; }
+      .hero-frame { padding: 36px 24px; }
+      .form-row { grid-template-columns: 1fr; }
+      .venue-wrap { grid-template-columns: 1fr; }
+      .venue-card { padding: 24px 20px; }
+      .checkbox-grid { grid-template-columns: 1fr; }
+      .rsvp-form-wrap { padding: 32px 24px; }
+      section { padding: 60px 20px; }
+      .btn-submit { letter-spacing: 0.5px; font-size: 0.82rem; }
+    }
+    @media (max-width: 480px) {
+      .hero-names { font-size: 2rem; }
+      .hero-badge { font-size: 0.82rem; }
+      .ceremonies-grid { grid-template-columns: 1fr; }
+      .hero-couple-img { width: min(190px, 72vw); height: min(190px, 72vw); }
+      .countdown-box { padding: 18px 20px; min-width: 90px; }
+      .countdown-num { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-brand"> Wedding Evite/వివాహ ఆహ్వానం</div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#ceremonies">Ceremonies</a></li>
+      <li><a href="#venue">Venue</a></li>
+      <li><a href="#rsvp">RSVP</a></li>
+      <li><a href="#countdown">Countdown</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-frame fade-in">
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="hero-badge" id="heroBadge">
+        <span>శ్రీరస్తు</span>
+        <span>శుభమస్తు</span>
+        <span>అవిఘ్నమస్తు</span>
+      </div>
+
+      <img class="ganesha-hero" src="lord_ganesha.jpeg" alt="Lord Ganesha" />
+      <div class="ganesha-invoke">॥ శ్రీ గణేశాయ నమః ॥</div>
+
+      
+      <h1 class="hero-names">
+        Aditya
+        <span class="amp">weds</span>
+        
+        Jyothirmayee
+      </h1>
+     <!-- <p class="hero-names-telugu">ఆదిత్య &amp; జ్యోతిర్మయి</p> -->
+     <br><br>
+      <img class="hero-couple-img" src="picture.jpeg" alt="Aditya & Jyothirmayee" />
+
+      <div class="hero-divider"></div>
+      <p class="hero-invite">With hearts full of joy and gratitude, we cordially invite you to share in the celebration of our wedding. Your presence on our special day would mean a lot to us. We look forward to celebrating love, laughter, and the beginning of our forever — together with you.<br> Kindly RSVP at your convenience.</p>
+      <p class="hero-date">Thursday, 02 July 2026</p>
+      <p class="hero-venue">Ember Premier Banquets, New Jersey</p>
+
+      <a href="#rsvp" class="btn-primary" id="heroBtn">Confirm Attendance &nbsp;✦</a>
+
+     <!-- <div class="marigold-row">🌼🌸🌼🌸🌼🌸🌼</div>-->
+    </div>
+  </section>
+
+  <!-- CEREMONIES -->
+  <section id="ceremonies">
+    <div class="container">
+      <h2 class="section-title fade-in" id="cerTitle">Wedding Ceremonies</h2>
+      <p class="section-sub fade-in">వివాహ కార్యక్రమాలు</p>
+      <div class="section-divider fade-in"><span class="deco-icon">✦</span></div>
+      <div class="ceremonies-grid">
+
+        <div class="ceremony-card fade-in">
+          <img class="ceremony-img" src="pelli.jpeg" alt="Muhurtham" />
+        
+          <div class="ceremony-name">Muhurtham</div>
+          <div class="ceremony-telugu">మహూర్తం</div>
+          <div class="ceremony-detail"><strong>Thursday, 02 Jul 2026</strong><br/>6:00 AM – 12:00 AM<br/>The main ceremony — tying of the Mangalasutram at the auspicious muhurtha time, with Saptapadi and Talambralu.</div>
+        </div>
+
+        <div class="ceremony-card fade-in">
+          <img class="ceremony-img" src="vratam.jpeg" alt="Satyanarayana Vratam" />
+          
+          <div class="ceremony-name">Satyanarayana Vratam</div>
+          <div class="ceremony-telugu">సత్యనారాయణ వ్రతం</div>
+          <div class="ceremony-detail"><strong>Friday, 03 Jul 2026</strong><br/>10:00 AM – 1:00 PM<br/>Post-wedding puja to seek Lord Satyanarayana's blessings for the newlyweds' prosperous life together.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- VENUE -->
+  <section id="venue">
+    <div class="container">
+      <h2 class="section-title fade-in">Venue</h2>
+      <p class="section-sub fade-in">వివాహ స్థలం</p>
+      <div class="section-divider fade-in"><span class="deco-icon">✦</span></div>
+      <div class="venue-wrap">
+        <div class="venue-card fade-in">
+          <h3 class="venue-name">Ember Premier Banquet Hall</h3>
+          <div class="venue-detail">
+            <span>🏛️ &nbsp;3793 US-1 Bldg # 1</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;Monmouth Junction, NJ 08852</span><br/>
+            <span>🚗 &nbsp;Ample parking available</span>
+          </div>
+          <a href="https://maps.app.goo.gl/D8WXcpQfqT5mwjWN9" target="_blank" class="btn-secondary">Open in Google Maps</a>
+        </div>
+        <div class="venue-card fade-in">
+          <h3 class="venue-name">Om Sri Sai Balaji Temple and Cultural Center</h3>
+          <div class="venue-detail">
+            <span>🏛️ &nbsp;285 Rhode Hall Rd</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;Monroe Township, NJ 08831</span><br/>
+            <span>🚗 &nbsp;Ample parking available</span>
+          </div>
+          <a href="https://maps.app.goo.gl/yGhYaW4Dec33wP1y5" target="_blank" class="btn-secondary">Open in Google Maps</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RSVP -->
+  <section id="rsvp">
+    <div class="container">
+      <h2 class="section-title fade-in" id="rsvpTitle">RSVP</h2>
+      <p class="section-sub fade-in">హాజరు నిర్ధారించండి</p>
+      <div class="section-divider fade-in"><span class="deco-icon">✦</span></div>
+
+      <div class="rsvp-form-wrap fade-in">
+        <form id="rsvpForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" name="name" placeholder="Your full name" required />
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="tel" name="phone" placeholder="+91 00000 00000" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="your@email.com" />
+          </div>
+          <div class="form-group">
+            <label>Number of Guests</label>
+            <select name="guests">
+              <option value="1">Just me (1)</option>
+              <option value="2">2 guests</option>
+              <option value="3">3 guests</option>
+              <option value="4">4 guests</option>
+              <option value="5+">5 or more</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label id="cerLabel">Which ceremonies will you attend?</label>
+            <div class="checkbox-grid">
+              <label class="checkbox-item"><input type="checkbox" name="ceremonies" value="muhurtham" checked /> Muhurtham (Main)</label>
+              <label class="checkbox-item"><input type="checkbox" name="ceremonies" value="satyanarayana" /> Satyanarayana Vratam</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label id="wishLabel">Wishes for the Couple (optional)</label>
+            <textarea name="message" placeholder="Share your blessings and wishes for Arjun & Meenakshi..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit" id="submitBtn">
+            ✦ &nbsp;Confirm Attendance &nbsp;|&nbsp; హాజరు నిర్ధారించండి &nbsp;✦
+          </button>
+        </form>
+
+        <div class="success-msg" id="successMsg">
+          <div class="success-icon">🌸</div>
+          <h3 id="successTitle">మీ హాజరు నిర్ధారించబడింది!</h3>
+          <p class="success-telugu" id="successSub">ధన్యవాదాలు</p>
+          <p id="successBody">Your attendance has been confirmed. We are overjoyed to celebrate this auspicious occasion with you. We will send you a reminder closer to the date. శుభమస్తు! 🙏</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section id="countdown">
+    <div class="container">
+      <h2 class="section-title fade-in">Count Down</h2>
+      <p class="section-sub fade-in">వివాహానికి మిగిలిన సమయం</p>
+      <div class="section-divider fade-in"><span class="deco-icon">✦</span></div>
+      <div class="countdown-grid fade-in" id="countdownGrid">
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdDays">--</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdHours">--</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdMinutes">--</div>
+          <div class="countdown-label">Minutes</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdSeconds">--</div>
+          <div class="countdown-label">Seconds</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-kolam">✦ ꫀ ✦ ꫀ ✦</div>
+    <p class="footer-families">
+      Hosted with love by the families of<br/>
+      <em>Sri &amp; Smt. Mallikarjuna Prasad</em> &amp; <em>Sri &amp; Smt. Krishna Mohan</em>
+    </p>
+  <!--  <p class="footer-contact">
+      For queries, call: <a href="tel:+919876543210">+91 98765 43210</a> &nbsp;|&nbsp;
+      <a href="mailto:arjun.weds.meenakshi@gmail.com">arjun.weds.meenakshi@gmail.com</a>
+    </p> -->
+    <div class="footer-kolam">🌸 🪔 🌸 🪔 🌸</div>
+    <p class="footer-copy">శుభమస్తు &mdash; May your blessings fill our hearts.</p>
+  </footer>
+
+  <script>
+    function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      this.style.display = 'none';
+      const msg = document.getElementById('successMsg');
+      msg.classList.add('active');
+      msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+    });
+
+
+    (function tickCountdown() {
+      const wedding = new Date('2026-07-02T07:14:00');
+      function update() {
+        const diff = wedding - Date.now();
+        if (diff <= 0) {
+          document.getElementById('countdownGrid').innerHTML = '<p class="countdown-done">శుభ వివాహం 🌸 The celebrations have begun!</p>';
+          return;
+        }
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        document.getElementById('cdDays').textContent    = String(d).padStart(2, '0');
+        document.getElementById('cdHours').textContent   = String(h).padStart(2, '0');
+        document.getElementById('cdMinutes').textContent = String(m).padStart(2, '0');
+        document.getElementById('cdSeconds').textContent = String(s).padStart(2, '0');
+      }
+      update();
+      setInterval(update, 1000);
+    })();
+
+  </script>
+
+</body>
+</html>
