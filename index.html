@@ -135,7 +135,7 @@
 
     .success-msg { display: none; text-align: center; padding: 40px 20px; }
     .success-msg.active { display: block; }
-    .success-icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .success-icon { font-size: 3.5rem; margin-bottom: 14px; margin-top: -35px; }
     .success-msg h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--maroon); margin-bottom: 8px; }
     .success-msg .success-telugu { font-family: 'Noto Serif Telugu', serif; font-size: 1.1rem; color: var(--gold); margin-bottom: 12px; }
     .success-msg p { color: var(--text-mid); font-size: 0.95rem; line-height: 1.7; }
@@ -314,7 +314,7 @@
             </div>
             <div class="form-group">
               <label>Phone Number *</label>
-              <input type="tel" name="phone" placeholder="+91 00000 00000" required />
+              <input type="tel" id="phoneInput" name="phone" placeholder="(999)999-9999" maxlength="13" inputmode="numeric" required />
             </div>
           </div>
           <div class="form-group">
@@ -340,7 +340,7 @@
           </div>
           <div class="form-group">
             <label id="wishLabel">Wishes for the Couple (optional)</label>
-            <textarea name="message" placeholder="Share your blessings and wishes for Arjun & Meenakshi..."></textarea>
+            <textarea name="message" placeholder="Share your blessings and wishes for Aditya & Jyothirmayee..."></textarea>
           </div>
           <button type="submit" class="btn-submit" id="submitBtn">
             ✦ &nbsp;Confirm Attendance &nbsp;|&nbsp; హాజరు నిర్ధారించండి &nbsp;✦
@@ -348,10 +348,13 @@
         </form>
 
         <div class="success-msg" id="successMsg">
-          <div class="success-icon">🌸</div>
+          <div class="success-icon"><img src="Rsvp_Dandam.jpeg" alt="Dandam" style="width:120px; height:120px; object-fit:cover; border-radius:50%; border:3px solid var(--gold);"/></div>
+          <p style="font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--maroon); margin-bottom:4px; letter-spacing:0.5px; font-weight:600;">Your Response Has Been Saved!</p>
+          <p class="success-telugu">Thank You</p>
           <h3 id="successTitle">మీ హాజరు నిర్ధారించబడింది!</h3>
           <p class="success-telugu" id="successSub">ధన్యవాదాలు</p>
-          <p id="successBody">Your attendance has been confirmed. We are overjoyed to celebrate this auspicious occasion with you. We will send you a reminder closer to the date.<br>శుభమస్తు! 🙏</p>
+          <p id="successBody">Your attendance has been confirmed. We are overjoyed to celebrate this auspicious occasion with you. We will send you a reminder closer to the date.</p>
+          <button onclick="editRsvp()" style="margin-top:20px; padding:12px 28px; background:transparent; border:2px solid var(--maroon); color:var(--maroon); font-family:'Lato',sans-serif; font-size:0.88rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer; border-radius:2px; transition:all 0.2s;" onmouseover="this.style.background='var(--maroon)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--maroon)'">✦ &nbsp;Edit RSVP</button>
         </div>
       </div>
     </div>
@@ -405,6 +408,32 @@
 
     function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
 
+    function editRsvp() {
+      document.getElementById('successMsg').classList.remove('active');
+      const form = document.getElementById('rsvpForm');
+      form.style.display = '';
+      isEditing = true;
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = false;
+      btn.innerHTML = '✦ &nbsp;Update RSVP &nbsp;|&nbsp; నవీకరించండి &nbsp;✦';
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function formatPhoneValue(digits) {
+      const d = (digits || '').replace(/\D/g, '').slice(0, 10);
+      if (d.length <= 3) return d.length ? '(' + d : '';
+      if (d.length <= 6) return '(' + d.slice(0,3) + ')' + d.slice(3);
+      return '(' + d.slice(0,3) + ')' + d.slice(3,6) + '-' + d.slice(6);
+    }
+
+    // ── PHONE FORMAT ──
+    document.getElementById('phoneInput').addEventListener('input', function() {
+      const digits = this.value.replace(/\D/g, '').slice(0, 10);
+      if (digits.length <= 3)       this.value = digits.length ? '(' + digits : '';
+      else if (digits.length <= 6)  this.value = '(' + digits.slice(0,3) + ')' + digits.slice(3);
+      else                          this.value = '(' + digits.slice(0,3) + ')' + digits.slice(3,6) + '-' + digits.slice(6);
+    });
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
     }, { threshold: 0.12 });
@@ -429,7 +458,7 @@
             if (data.hasRsvp) {
               isEditing = true;
 
-              document.querySelector('input[name="phone"]').value = data.phone || '';
+              document.querySelector('input[name="phone"]').value = formatPhoneValue(data.phone);
               document.querySelector('input[name="email"]').value = data.email || '';
               const guestSelect = document.querySelector('select[name="guests"]');
               if (guestSelect) guestSelect.value = data.guests || '1';
@@ -456,6 +485,16 @@
     // ── FORM SUBMIT ──
     document.getElementById('rsvpForm').addEventListener('submit', function(e) {
       e.preventDefault();
+
+      const phoneDigits = document.getElementById('phoneInput').value.replace(/\D/g, '');
+      if (phoneDigits.length !== 10) {
+        document.getElementById('phoneInput').focus();
+        document.getElementById('phoneInput').style.borderColor = 'var(--maroon)';
+        document.getElementById('phoneInput').placeholder = 'Enter exactly 10 digits';
+        return;
+      }
+      document.getElementById('phoneInput').style.borderColor = '';
+
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
       btn.textContent = 'Submitting...';
@@ -468,7 +507,7 @@
       url.searchParams.set('action', 'rsvp');
       url.searchParams.set('token', guestToken || 'direct');
       url.searchParams.set('name', form.get('name'));
-      url.searchParams.set('phone', form.get('phone'));
+      url.searchParams.set('phone', (form.get('phone') || '').replace(/\D/g, ''));
       url.searchParams.set('email', form.get('email') || '');
       url.searchParams.set('guests', form.get('guests'));
       url.searchParams.set('ceremonies', ceremonies);
