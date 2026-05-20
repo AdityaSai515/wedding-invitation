@@ -401,7 +401,7 @@
 
   <script>
     // ── PASTE YOUR APPS SCRIPT URL HERE AFTER DEPLOYMENT ──
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyS8dJAdxAfsJPvpp76RqRTGfkpqjXo3EtadgubtuK0Dt49IBWS2HQoHWMKQgiwpeH0/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrSk9EL8Jn7E-Vnez0T7-EgRbFfYnM_JZ49S9sHI0mAj_W59Lq0mL7zQ6Tc8v6H1d1/exec';
 
     function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
 
@@ -416,9 +416,10 @@
     let isEditing = false;
 
     if (guestToken) {
-      fetch(`${SCRIPT_URL}?action=lookup&token=${encodeURIComponent(guestToken)}`)
+      fetch(`${SCRIPT_URL}?action=lookup&token=${encodeURIComponent(guestToken)}`, { redirect: 'follow' })
         .then(r => r.json())
         .then(data => {
+          console.log('Lookup response:', data);
           if (data.success) {
             const nameInput = document.querySelector('input[name="name"]');
             nameInput.value = data.name;
@@ -430,10 +431,11 @@
 
               document.querySelector('input[name="phone"]').value = data.phone || '';
               document.querySelector('input[name="email"]').value = data.email || '';
-              document.querySelector('select[name="guests"]').value = data.guests || '1';
-              const existing = (data.ceremonies || '').split(', ');
+              const guestSelect = document.querySelector('select[name="guests"]');
+              if (guestSelect) guestSelect.value = data.guests || '1';
+              const existing = (data.ceremonies || '').split(', ').map(s => s.trim());
               document.querySelectorAll('input[name="ceremonies"]').forEach(cb => {
-                cb.checked = existing.includes(cb.value);
+                cb.checked = existing.includes(cb.value.trim());
               });
               document.querySelector('textarea[name="message"]').value = data.message || '';
 
@@ -444,9 +446,11 @@
 
               document.getElementById('submitBtn').innerHTML = '✦ &nbsp;Update RSVP &nbsp;|&nbsp; నవీకరించండి &nbsp;✦';
             }
+          } else {
+            console.warn('Token not found in sheet:', guestToken);
           }
         })
-        .catch(() => {});
+        .catch(err => console.error('Lookup failed:', err));
     }
 
     // ── FORM SUBMIT ──
