@@ -400,6 +400,9 @@
   </footer>
 
   <script>
+    // ── PASTE YOUR APPS SCRIPT URL HERE AFTER DEPLOYMENT ──
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzojRl4_8zbDLbmEcAYQkWE9f0vOIk7DW_YvvxWuEaw5JkBVGGONDpAiPmTr5DPhOND/exec';
+
     function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
 
     const observer = new IntersectionObserver((entries) => {
@@ -407,18 +410,62 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
+    // ── GUEST TOKEN LOOKUP ──
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestToken = urlParams.get('guest');
+
+    if (guestToken && SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbzojRl4_8zbDLbmEcAYQkWE9f0vOIk7DW_YvvxWuEaw5JkBVGGONDpAiPmTr5DPhOND/exec') {
+      fetch(`${SCRIPT_URL}?action=lookup&token=${encodeURIComponent(guestToken)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            const nameInput = document.querySelector('input[name="name"]');
+            nameInput.value = data.name;
+            nameInput.readOnly = true;
+            nameInput.style.cssText += '; background:#f0ebe0; cursor:default;';
+          }
+        })
+        .catch(() => {});
+    }
+
+    // ── FORM SUBMIT ──
     document.getElementById('rsvpForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      this.style.display = 'none';
-      const msg = document.getElementById('successMsg');
-      msg.classList.add('active');
-      msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      const form = new FormData(this);
+      const ceremonies = [...document.querySelectorAll('input[name="ceremonies"]:checked')]
+        .map(c => c.value).join(', ');
+
+      const url = new URL(SCRIPT_URL);
+      url.searchParams.set('action', 'rsvp');
+      url.searchParams.set('token', guestToken || 'direct');
+      url.searchParams.set('name', form.get('name'));
+      url.searchParams.set('phone', form.get('phone'));
+      url.searchParams.set('email', form.get('email') || '');
+      url.searchParams.set('guests', form.get('guests'));
+      url.searchParams.set('ceremonies', ceremonies);
+      url.searchParams.set('message', form.get('message') || '');
+
+      fetch(url.toString())
+        .then(() => {
+          this.style.display = 'none';
+          const msg = document.getElementById('successMsg');
+          msg.classList.add('active');
+          msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        })
+        .catch(() => {
+          btn.disabled = false;
+          btn.textContent = '✦  Confirm Attendance  |  హాజరు నిర్ధారించండి  ✦';
+          alert('Something went wrong. Please try again.');
+        });
     });
 
     document.querySelectorAll('.nav-links a').forEach(a => {
       a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
     });
-
 
     (function tickCountdown() {
       const wedding = new Date('2026-07-02T07:14:00');
