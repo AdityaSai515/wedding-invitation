@@ -315,6 +315,7 @@
             <div class="form-group">
               <label>Phone Number *</label>
               <input type="tel" id="phoneInput" name="phone" placeholder="(999)999-9999" maxlength="13" inputmode="numeric" required />
+              <span id="phoneError" style="display:none; color:#800020; font-size:0.8rem; margin-top:4px; display:block;">Please enter a valid 10-digit phone number.</span>
             </div>
           </div>
           <div class="form-group">
@@ -486,14 +487,22 @@
     document.getElementById('rsvpForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const phoneDigits = document.getElementById('phoneInput').value.replace(/\D/g, '');
+      const phoneInput = document.getElementById('phoneInput');
+      const phoneError = document.getElementById('phoneError');
+      const phoneDigits = phoneInput.value.replace(/\D/g, '');
       if (phoneDigits.length !== 10) {
-        document.getElementById('phoneInput').focus();
-        document.getElementById('phoneInput').style.borderColor = 'var(--maroon)';
-        document.getElementById('phoneInput').placeholder = 'Enter exactly 10 digits';
+        phoneInput.focus();
+        phoneInput.style.borderColor = '#800020';
+        phoneError.style.display = 'block';
+        phoneInput.addEventListener('input', function resetPhone() {
+          phoneInput.style.borderColor = '';
+          phoneError.style.display = 'none';
+          phoneInput.removeEventListener('input', resetPhone);
+        });
         return;
       }
-      document.getElementById('phoneInput').style.borderColor = '';
+      phoneInput.style.borderColor = '';
+      phoneError.style.display = 'none';
 
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
@@ -514,7 +523,9 @@
       url.searchParams.set('message', form.get('message') || '');
 
       fetch(url.toString())
-        .then(() => {
+        .then(r => r.json())
+        .then(data => {
+          if (!data.success) throw new Error('Script returned failure');
           this.style.display = 'none';
           if (isEditing) {
             document.getElementById('successTitle').textContent = 'మీ RSVP నవీకరించబడింది!';
