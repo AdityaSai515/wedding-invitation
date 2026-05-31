@@ -330,13 +330,18 @@
           </div>
           <div class="form-group">
             <label>Number of Guests</label>
-            <select name="guests">
+            <select name="guests" id="guestsSelect">
               <option value="1">Just me (1)</option>
               <option value="2">2 guests</option>
               <option value="3">3 guests</option>
               <option value="4">4 guests</option>
               <option value="5+">5 or more</option>
             </select>
+          </div>
+          <div class="form-group" id="guestsExactGroup" style="display:none; margin-top:-12px;">
+            <label>Exact Number of Guests</label>
+            <input type="number" name="guests_exact" id="guestsExact" min="5" max="10" placeholder="Enter number (5–10)" inputmode="numeric" />
+            <span id="guestsExactError" style="display:none; color:#800020; font-size:0.8rem; margin-top:4px;"></span>
           </div>
           <div class="form-group">
             <label id="cerLabel">Which ceremonies will you attend?</label>
@@ -466,6 +471,34 @@
     ceremonyBoxes.forEach(cb => cb.addEventListener('change', updateCeremonyMutex));
     updateCeremonyMutex();
 
+    document.getElementById('guestsSelect').addEventListener('change', function() {
+      const group = document.getElementById('guestsExactGroup');
+      const input = document.getElementById('guestsExact');
+      if (this.value === '5+') {
+        group.style.display = 'block';
+        input.required = true;
+      } else {
+        group.style.display = 'none';
+        input.required = false;
+        input.value = '';
+        document.getElementById('guestsExactError').style.display = 'none';
+      }
+    });
+
+    document.getElementById('guestsExact').addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+      const val = parseInt(this.value, 10);
+      const err = document.getElementById('guestsExactError');
+      if (this.value && (val < 5 || val > 10)) {
+        err.textContent = val < 5 ? 'Minimum is 5 guests.' : 'Maximum is 10 guests.';
+        err.style.display = 'block';
+        this.style.borderColor = '#800020';
+      } else {
+        err.style.display = 'none';
+        this.style.borderColor = '';
+      }
+    });
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
     }, { threshold: 0.12 });
@@ -538,6 +571,19 @@
       }
       phoneInput.style.borderColor = '';
       phoneError.style.display = 'none';
+
+      if (document.getElementById('guestsSelect').value === '5+') {
+        const exactInput = document.getElementById('guestsExact');
+        const exactVal = parseInt(exactInput.value, 10);
+        const exactErr = document.getElementById('guestsExactError');
+        if (!exactInput.value || exactVal < 5 || exactVal > 10) {
+          exactInput.focus();
+          exactInput.style.borderColor = '#800020';
+          exactErr.textContent = !exactInput.value ? 'Please enter the exact number of guests.' : exactVal < 5 ? 'Minimum is 5 guests.' : 'Maximum is 10 guests.';
+          exactErr.style.display = 'block';
+          return;
+        }
+      }
 
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
