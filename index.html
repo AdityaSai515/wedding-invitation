@@ -315,7 +315,7 @@
             <div class="form-group">
               <label>Phone Number *</label>
               <input type="tel" id="phoneInput" name="phone" placeholder="(999)999-9999" maxlength="13" inputmode="numeric" required />
-              <span id="phoneError" style="display:none; color:#800020; font-size:0.8rem; margin-top:4px; display:block;">Please enter a valid 10-digit phone number.</span>
+              <span id="phoneError" style="display:none; color:#800020; font-size:0.8rem; margin-top:4px;">Please enter a valid 10-digit phone number.</span>
             </div>
           </div>
           <div class="form-group">
@@ -433,6 +433,10 @@
       if (digits.length <= 3)       this.value = digits.length ? '(' + digits : '';
       else if (digits.length <= 6)  this.value = '(' + digits.slice(0,3) + ')' + digits.slice(3);
       else                          this.value = '(' + digits.slice(0,3) + ')' + digits.slice(3,6) + '-' + digits.slice(6);
+      if (digits.length === 10) {
+        this.style.borderColor = '';
+        document.getElementById('phoneError').style.display = 'none';
+      }
     });
 
     const observer = new IntersectionObserver((entries) => {
