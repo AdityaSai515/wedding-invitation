@@ -477,7 +477,11 @@
               document.getElementById('submitBtn').innerHTML = '✦ &nbsp;Update RSVP &nbsp;|&nbsp; నవీకరించండి &nbsp;✦';
             }
           } else {
-            console.warn('Token not found in sheet:', guestToken);
+            document.getElementById('rsvpForm').innerHTML = `
+              <div style="text-align:center; padding:24px 16px;">
+                <p style="font-family:'Playfair Display',serif; font-size:1.2rem; color:#800020; margin-bottom:12px;">Your invitation link is invalid or has expired.</p>
+                <p style="font-size:0.9rem; color:#6B3A1F; line-height:1.7;">Please use the personal link sent to you.<br/>If you need help, contact us directly.</p>
+              </div>`;
           }
         })
         .catch(err => console.error('Lookup failed:', err));
